@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>HW5</title>
+    <!--- D3 IMPORT HERE --->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        #viz {
+            background-color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <h3>Name: Yanfei Dai, NetID: yd429</h3>Q
+    <p id="p1">
+        Problem 1:
+    </p>
+    <ul>
+      <li>Divergent scale, this is an effective divergent color scale. Has a bright value in the center and becomes progressively darker in color toward the ends.</li>
+      <li>No, It is difficult to determine the median because the median is not a color that can be quickly determined. In this case you should use the divergent scale.</li>
+      <li><strong>Deuteranomaly</strong> : The lime green on the left side becomes more like a pale yellow, with less change the further to the right you go.
+        <strong>Protanomaly</strong> : Gray-blue leans toward blue, while lime-green is more gray or yellowish.
+        <strong>Tritanomaly </strong>: The gray-blue is more grayish, and the green component of the lime-green may be more prominent.
+      </li>
+      <li>Yes. This color scale is gradient, and you can see the trend from short-lived dark blue to blue to light green to green to pale yellow to yellow.</li>
+    </ul>
+ 
+    
+    <p id="p2">
+        A&B:
+    </p>
+    <p>Advantage: Logarithmic color scales provide better discriminatory properties, especially when the data is exponentially distributed. This helps to visualize patterns in the dataset.
+    </p>
+      <p>Disadvantage: The visualization is not intuitive and realistic, as differences in color do not represent consistent differences in actual data values.
+    </p>
+    <svg id="colorSpace" height="420" width="420"></svg>
+    <input type="range" id="lightnessSlider" min="0" max="100" value="50" step="1">
+<script>
+    let colorArray = [];
+   
+    for (let h = 0; h <= 360; h += 18) {
+        for (let s = 0; s <= 100; s += 5) {
+            colorArray.push({
+                "h": h,
+                "s": s
+            });
+        }
+    }
+    console.log(colorArray);
+
+    function showCircles(lightness) {
+    const xScale = d3.scaleLinear()
+                     .domain([0, 360]) 
+                     .range([10, 410]); 
+
+    const yScale = d3.scaleLinear()
+                     .domain([0, 100]) 
+                     .range([410, 10]); 
+
+    const circles = d3.select("#colorSpace")
+                      .selectAll("circle")
+                      .data(colorArray); 
+
+    circles.join("circle")
+           .attr("cx", d => xScale(d.h))
+           .attr("cy", d => yScale(d.s))
+           .attr("r", 10)
+           .style("fill", d => d3.hsl(d.h, d.s / 100, lightness / 100))
+           .style("stroke", "none");
+}
+
+showCircles(50);
+d3.select("#lightnessSlider").on("input", function() {
+            let currentLightness = +d3.select(this).property("value");
+            showCircles(currentLightness);
+        });
+
+</script>
+
+
+    <svg id="heatmap" height="500" width="500" style="background-color: black;" >
+      
+      
+    </svg>
+    <script>
+    d3.csv("NCAA_shots.csv", d3.autoType)
+    .then( (data) => {
+      
+ 
+     console.log(data);
+     const svg = d3.select("#heatmap");
+
+    const padding = 5; // space for each rectangle
+
+            // Get the extent of the 'attempt' values from the data
+    const [minAttempt, maxAttempt] = d3.extent(data, d => +d.log_attempt);
+
+            // Create a color scale using d3.interpolateViridis
+    const colorScale = d3.scaleSequential(d3.interpolateViridis)
+        .domain([minAttempt, maxAttempt]);
+
+            // Loop over each data point to create the rectangles
+    data.forEach(d => {
+        svg.append("rect")
+            .attr("x", d.x * padding)
+            .attr("y", d.y * padding)
+            .attr("width", padding)
+            .attr("height", padding)
+            .attr("fill", colorScale(d.log_attempt));
+    });
+});
+    </script>
+
+
+</body>
+
+</html>

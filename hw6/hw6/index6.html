@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>HW5</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        #viz {
+            background-color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <h3>Name: Yanfei Dai, NetID: yd429</h3>
+    <p id="p1">
+        For A: what data issues you found and how you fixed them:
+    </p>
+    <p>
+        The price field price has a dollar sign, so it is converted to a plain number. There is a country field value of "Fakerton", which is obviously a fake country name. The points field of this data item has a value of "109", which is outside the scoring range. Its state field value is "Fhloston Paradise", which is also a fake area name.
+    </p>
+    <p>My solution to the above problem is as follows:
+        Convert the price field from a string to a number.
+        Remove items that have a false data pattern.
+    </p>
+    <p id="p2">
+        For B: I chose a linear scale and used gridlines to improve the readability of the chart. After that, I used different colors to represent the different states, which allows the user to distinguish the different color blocks and graphs at a glance. The axes were designed to be easy to read while avoiding visual clutter.
+    </p>
+    <p id="p3">
+        For C: I chose the jittering method to reduce overlap between data points, especially when multiple data points have the same price and points. This makes the data points more distinguishable. One advantage of the jittering approach is that it improves the visibility and distinguishability of data points. However, a disadvantage is that it can cause the actual position of the data points to deviate from their original values, potentially affecting the accuracy of the data representation.
+    </p>
+    <p id="p4">
+        For D: While mouse hover interactions increase user engagement, they also increase the level of understanding of individual data points. Frustratingly, if the mouse hover is performed in an area with dense data points, it can be a bit confusing as the data points are not clearly visible. This is where using a dithering method to minimize overlap and ensure that labels don't flicker due to overlap issues becomes necessary.
+    </p>
+
+<script>
+// Data cleaning and filtering
+d3.json("wines.json").then(data => {
+    console.log(data);
+
+    let badDataCount = 0;
+    let cleanedData = data.filter(function(d) {
+        if (typeof d.price === "string") {
+            d.price = +d.price.replace(/\$/, "");
+        }
+        if (d.country === "Fakerton" || d.state === "Fhloston Paradise" || d.points > 100) {
+            badDataCount++;
+            return false;
+        }
+        return true;
+    });
+
+    console.log(`Removed ${badDataCount} bad data items.`);
+    console.log(`Remaining data points: ${cleanedData.length}`);
+
+    visualizeData(cleanedData);  // Call the visualization function with cleaned data
+
+}).catch(function(error) {
+    console.log("Error loading data:", error);
+});
+
+function visualizeData(data) {
+    // SVG setup
+    let svg = d3.select("body")
+        .append("svg")
+        .attr("width", 800)
+        .attr("height", 500)
+        .attr("id", "mySVG");
+
+    let margin = {top: 20, right: 20, bottom: 50, left: 50};
+    let width = 800 - margin.left - margin.right;
+    let height = 500 - margin.top - margin.bottom;
+
+    let g = svg.append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    // Scales and axes
+    let xExtent = d3.extent(data, d => d.price);
+    let yExtent = d3.extent(data, d => d.points);
+
+    let xScale = d3.scaleLinear().domain(xExtent).range([0, width]);
+    let yScale = d3.scaleLinear().domain(yExtent).range([height, 0]);
+    let colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+
+    let xAxis = d3.axisBottom(xScale);
+    let yAxis = d3.axisLeft(yScale);
+
+    g.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+    g.append("g").call(yAxis);
+
+    // Gridlines
+    let xGridlines = d3.axisBottom(xScale).tickSize(-height).tickFormat("");
+    let yGridlines = d3.axisLeft(yScale).tickSize(-width).tickFormat("");
+
+    g.append("g")
+        .attr("class", "grid")
+        .attr("transform", "translate(0," + height + ")")
+        .style("stroke-dasharray", "3 3")
+        .style("stroke", "lightgray")
+        .call(xGridlines);
+    g.append("g")
+        .attr("class", "grid")
+        .style("stroke-dasharray", "3 3")
+        .style("stroke", "lightgray")
+        .call(yGridlines);
+
+    // Jitter function
+    function jitter() {
+        return Math.random() * 8 - 4;  // Random number between -4 and 4
+    }
+
+    // Data points with mouseover interaction
+    g.selectAll("circle")
+        .data(data)
+        .enter().append("circle")
+        .attr("cx", d => xScale(d.price) + jitter())
+        .attr("cy", d => yScale(d.points) + jitter())
+        .attr("r", 5)
+        .attr("fill", d => colorScale(d.state))
+        .on("mouseover", function(event, d) {
+            d3.select(this).attr("r", 10);
+            g.append("text")
+                .attr("id", "floatingLabel")
+                .attr("x", xScale(d.price) + 10)
+                .attr("y", yScale(d.points) - 10)
+                .text(d.title)
+                .attr("font-size", "12px")
+                .attr("fill", "white");
+        })
+        .on("mouseout", function(event, d) {
+            d3.select(this).attr("r", 5);
+            g.select("#floatingLabel").remove();
+        });
+}
+</script>
+</body>
+</html>

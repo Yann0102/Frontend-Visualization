@@ -1,0 +1,80 @@
+<html><body>
+    <p id="p1">
+    Problem 1: boolean, object, string, number, undefined  are canonical Javascript types
+    <script>
+    
+    console.log(2>1);
+    console.log(typeof(2>1));
+
+    console.log( [1, 2, 3] );
+    console.log(typeof( [1, 2, 3] ));
+
+    console.log("Dave");
+    console.log(typeof("Dave"));
+
+    console.log(1);
+    console.log(typeof(1));
+    
+    let A;
+    console.log(A);
+    console.log(typeof(A));  
+    </script>
+    </p>
+
+    <p id="p2">
+      Problem 2: In JavaScript, null is considered a null value, but when null is checked using the typeof operator, it returns 'object', which is an unusual behavior. In the first implementation of JavaScript, JavaScript values were represented as type tokens and values. The type tag of an object is 0. It is represented as a NULL pointer. Therefore, null has 0 as its type tag, so the return value is 'object'.
+      <script>
+    </script>
+    </p>
+
+    <p id="p3">
+      Problem 3: When values of different datatypes are used for operations that require a specific datatype, one datatype can be converted to another datatype for manipulation or comparison. This conversion can be explicit (performed explicitly by the developer) or implicit.
+      example1: input([]+[]), output is "".When the plus sign is used and other data types (such as arrays) are involved, JavaScript tries to convert them to strings and then splice them.
+      example2: input("10"-5), output is 5. In JavaScript, the subtraction operation tries to convert the string to a number instead of performing string splicing.
+      <script>
+      console.log([]+[]);
+      console.log(typeof([]+[]));  //to prove that it is String
+      console.log("10"-5);
+    </script>
+    </p>
+
+    <p id="p4">
+      Problem 4: built-in Fibonacci functions
+      <script>
+        function  fib(n){
+          if(n<0){
+            return undefined;
+          }else if(n==0){
+            return 0;
+          }else if(n==1){
+            return 1;
+          }else{
+            return fib(n-2)+fib(n-1);
+          }
+        }
+        console.log(fib(-2)); 
+        console.log(fib(0)); 
+        console.log(fib(1)); 
+        console.log(fib(4)); 
+        console.log(fib(7)); 
+        console.log(fib(9));
+    </script>
+    </p>
+
+    <p id="p5">
+      Problem 5: Personal crises and medical issues need to be communicated as early in advance as possible. 
+      Failure to submit assignments by the deadline will result in a zero, no exceptions. No excuses will be 
+      accepted. Assignments must be in a format that can be opened on the nearest computer system. We need to 
+      submit assignments in a timely manner and verify them at CMS. If there is a problem with CMS or the 
+      computer you can use Cornell Mail to email it to a staff member (must be before the deadline). If there 
+      is a valid reason for an extension, you can request a sliding day. An assignment can use up to 3 Sliding 
+      Days for a total of 72 hours of late submission. If you run out of Sliding Days, you will automatically 
+      receive a 0 for any late assignment. Staff may provide CMS comments explaining your current Sliding Day 
+      usage, but ultimately it is up to you to track your work.
+      <script>
+    </script>
+    </p>
+
+
+
+   </body></html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>HW3</title>
+    <!--- D3 IMPORT HERE --->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+
+<body>
+    <h3>Name: Yanfei Dai, NetID: yd429</h3>
+    <p id="p1">
+        Problem 1:
+    </p>
+    <svg height="400" width="400"></svg>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let svg = d3.select("svg");
+
+            svg.append("circle")
+                .attr("cx", 200)
+                .attr("cy", 200)
+                .attr("r", 5)
+                .style("fill", 'light green')
+                .style("stroke-width", 0);
+
+            svg.append('text')
+                .attr('x', 200)
+                .attr('y', 200)
+                .attr('text-anchor', 'middle')
+                .attr('dominant-baseline', 'middle')
+                .style('font-family', 'Courier')
+                .style('font-size', '20px')
+                .style('fill', 'darkblue')
+                .text('INFO-3300');
+
+            svg.append('rect')
+                .attr('x', 100)
+                .attr('y', 140)
+                .attr('width', 70)
+                .attr('height', 30)
+                .style('fill', 'red')
+                .style('stroke', 'yellow')
+                .style('stroke-width', 1);
+
+            svg.append('rect')
+                .attr('x', 100)
+                .attr('y', 240)
+                .attr('width', 90)
+                .attr('height', 10)
+                .style('fill', 'orange')
+                .style('stroke', 'brown')
+                .style('stroke-width', 1);
+
+            svg.append('rect')
+                .attr('x', 280)
+                .attr('y', 180)
+                .attr('width', 30)
+                .attr('height', 70)
+                .style('fill', 'green')
+                .style('stroke', 'purple')
+                .style('stroke-width', 1);
+        });
+    </script>
+
+    <p id="p2">
+        Problem 2:
+    </p>
+
+    <svg id="plot" width='360' height='360' xmlns='http://www.w3.org/2000/svg'>
+        <rect x="20" y="20" width="320" height="320" style="fill:none; stroke:lightgrey" />
+        <rect x="0" y="0" width="360" height="360" style="fill:none; stroke-width:1px; stroke:black" />
+    </svg>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Dataset
+            let data = [
+                { "x": 1.0, "y": 9.0 },
+                { "x": 1.5, "y": 6.0 },
+                { "x": 2.5, "y": 4.0 },
+                { "x": 4.0, "y": 2.0 },
+                { "x": 5.0, "y": 1.6 },
+                { "x": 6.0, "y": 2.4 },
+                { "x": 7.0, "y": 3.0 },
+                { "x": 8.0, "y": 3.4 },
+                { "x": 9.0, "y": 3.6 }
+            ];
+
+            const svg = d3.select("#plot");
+
+            // Create scales
+            let xScale = d3.scaleLinear()
+                .domain([0, 10])
+                .range([20, 340]);
+
+            let yScale = d3.scaleLinear()
+                .domain([0, 10])
+                .range([340, 20]);
+
+            // Draw gridlines
+            for (let i = 0; i <= 10; i++) {
+                svg.append("line")
+                    .attr("x1", xScale(i))
+                    .attr("y1", 20)
+                    .attr("x2", xScale(i))
+                    .attr("y2", 340)
+                    .style("stroke", "grey")
+                    .style("stroke-width", 1);
+
+                svg.append("line")
+                    .attr("x1", 20)
+                    .attr("y1", yScale(i))
+                    .attr("x2", 340)
+                    .attr("y2", yScale(i))
+                    .style("stroke", "grey")
+                    .style("stroke-width", 1);
+            }
+
+            // Draw data points
+            data.forEach(d => {
+                svg.append("circle")
+                    .attr("cx", xScale(d.x))
+                    .attr("cy", yScale(d.y))
+                    .attr("r", 10)
+                    .style("fill", "teal");
+            });
+        });
+    </script>
+</body>
+
+</html>

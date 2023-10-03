@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>HW4</title>
+    <!--- D3 IMPORT HERE --->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        .gridlines .tick line {
+            stroke: lightgrey;
+            stroke-opacity: 0.7;
+        }
+        .gridlines .domain {
+            visibility: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <h3>Name: Yanfei Dai, NetID: yd429</h3>
+    <p id="p1">
+        Problem 1:
+    </p>
+    <p >
+        A
+    </p>
+    <p>
+            Mark: Irregular city shapes in different colors
+    </p>
+    <p >
+        Channels: Varying the color of different irregular shapes
+    </p>
+    <p >
+        B
+    </p>
+    <p>
+            Mark: Blue, red and green circles
+    </p>
+    <p >
+        Channels: Varying the vertical alignment position and horizontal alignment position and color of the circle.
+    </p>
+    <p id="p2">
+        Problem 2:
+    </p>
+
+    <script>
+        d3.json('chip_dataset.json')
+          .then(function(data) { 
+      
+        console.log(data);
+        dataset = data;  // ... and assign the data to it
+
+// B. 创建500x500的SVG元素
+        const svg = d3.select("body").append("svg")
+        .attr("width", 500)
+        .attr("height", 500);
+
+        const svgWidth = 500;
+        const svgHeight = 500;
+        const margins = {top: 10, right: 10, bottom: 50, left: 50}; // 定义对象表示图表的边距。
+        const chartWidth = svgWidth - margins.left - margins.right;
+        const chartHeight = svgHeight - margins.top - margins.bottom;
+
+
+        const chartArea = svg.append("g")
+             .attr("transform", "translate(" + margins.left + "," + margins.top + ")");
+
+    
+
+        const xExtent = d3.extent(data, d => d['Release Day'] );
+        const xScale = d3.scaleLinear().domain(xExtent).range([0, chartWidth]);
+    
+        const yExtent = d3.extent(data, d => d['Transistors(million)'] );
+        const yScale = d3.scaleLog().domain(yExtent).range([chartHeight, 0]);  //由scalelinear改成scalelog
+        
+        const yAxis = d3.axisLeft(yScale);
+        chartArea.append("g")
+        .attr("transform", "translate(0,0)")
+        .call(yAxis);
+        const yAxisGrid = d3.axisLeft(yScale)
+        .tickSize(-chartWidth)
+        .tickFormat("");
+        chartArea.append("g")
+        .attr("class", "gridlines")
+        .attr("transform", "translate(0,0)")
+        .call(yAxisGrid);
+
+        const xAxis = d3.axisBottom(xScale);
+        chartArea.append("g")
+        .attr("transform", `translate(0,${chartHeight})`)
+        .call(xAxis);
+
+        const xAxisGrid = d3.axisBottom(xScale)
+        .tickSize(-chartHeight)
+        .tickFormat("");
+        chartArea.append("g")
+        .attr("class", "gridlines")
+        .attr("transform", `translate(0,${chartHeight})`)
+        .call(xAxisGrid);
+
+        data.forEach(function(d) {
+        chartArea.append("circle")
+        .attr("cx", xScale(d["Release Day"]))
+        .attr("cy", yScale(d["Transistors(million)"]))
+        .attr("r", 3)
+        .attr("fill", "darkblue")  
+        .attr("opacity", 0.3);
+});
+
+        
+        
+      } );
+    </script>
+</body>
+
+</html>
